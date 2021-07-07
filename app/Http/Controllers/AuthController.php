@@ -26,8 +26,9 @@ class AuthController extends Controller
         $token = $user->createToken('token')->plainTextToken;
 
         $response = [
+            'message' => 'You have been registered successfully',
             'data' => new UserResource($user),
-            'token' => $token
+            'token' => $token,
         ];
 
         return response($response, 201);
@@ -51,8 +52,9 @@ class AuthController extends Controller
         $token = $user->createToken('token')->plainTextToken;
 
         $response = [
+            'message' => 'Logged In Successfully',
             'data' => new UserResource($user),
-            'token' => $token
+            'token' => $token,
         ];
 
         return response($response, 201);
