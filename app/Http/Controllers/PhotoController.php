@@ -56,7 +56,11 @@ class PhotoController extends Controller
      */
     public function show($id)
     {
-        //
+        $photo = Photo::findOrFail($id);
+        $response = [
+            'data' => new PhotoResource($photo)
+        ];
+        return response($response, 200);
     }
 
     /**
