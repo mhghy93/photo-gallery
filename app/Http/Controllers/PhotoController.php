@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PhotoResource;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 
 class PhotoController extends Controller
@@ -17,16 +19,6 @@ class PhotoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -34,7 +26,26 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255',
+            'pic' => 'required|mimes:jpg,png,jpeg|max:5048',
+        ]);
+
+        $imagePath = $request->file('pic')->store('images');
+        $request->file('pic')->move(public_path('images'), $imagePath);
+
+        $photo = Photo::create([
+            'title' => $request->input('title'),
+            'pic' => $imagePath, 
+            'user_id' => auth()->user()->id
+        ]);
+
+        $response = [
+            'message' => 'Photo Uploaded Successfully',
+            'data' => new PhotoResource($photo)
+        ];
+
+        return response($response, 201);
     }
 
     /**
@@ -44,17 +55,6 @@ class PhotoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
