@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         // Check Password
         if (!$user || !Hash::check($validator['password'], $user->password)) {
-            return response(['Bad credentials'], 401);
+            return response(['message' => 'Bad credentials'], 401);
         }
 
         $token = $user->createToken('token')->plainTextToken;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,9 @@ Route::get('/photos/{id}', [PhotoController::class, 'show']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/photos', [PhotoController::class, 'store']);
+
+    Route::get('/profile', [ProfileController::class, 'show']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
