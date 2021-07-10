@@ -26,7 +26,8 @@ Route::get('/photos/{id}', [PhotoController::class, 'show']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/photos', [PhotoController::class, 'store']);
 
-    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::get('/profile/{id}', [ProfileController::class, 'show']);
+    Route::put('/profile/{id}', [ProfileController::class, 'update']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
