@@ -70,9 +70,28 @@ class PhotoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateTitle(Request $request, $id)
     {
-        //
+        $photo = Photo::findOrFail($id);
+
+        if ($photo->user_id == auth()->user()->id) {
+            $request->validate([
+                'title' => 'required|max:255'
+            ]);
+
+            $photo->update([
+                'title' => $request->input('title')
+            ]);
+
+            return response([
+                'message' => 'Photo Title Updated',
+                'data' => new PhotoResource($photo)
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
     }
 
     /**
