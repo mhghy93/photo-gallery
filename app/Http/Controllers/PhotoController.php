@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class PhotoController extends Controller
 {
@@ -85,6 +86,46 @@ class PhotoController extends Controller
 
             return response([
                 'message' => 'Photo Title Updated',
+                'data' => new PhotoResource($photo)
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+    }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateImage(Request $request, $id)
+    {
+        $photo = Photo::findOrFail($id);
+
+        if ($photo->user_id == auth()->user()->id) {
+            $request->validate([
+                'pic' => 'required|mimes:jpg,png,jpeg|max:5048',
+            ]);
+
+            $oldImagePath = $photo->pic;
+
+            if (File::exists($oldImagePath)) {
+                File::delete($oldImagePath);
+            }
+
+            $imagePath = $request->file('pic')->store('images');
+            $request->file('pic')->move(public_path('images'), $imagePath);
+
+            $photo->update([
+                'pic' => $imagePath
+            ]);
+
+            return response([
+                'message' => 'Image Updated',
                 'data' => new PhotoResource($photo)
             ], 200);
         } else {

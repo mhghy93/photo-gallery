@@ -26,6 +26,7 @@ Route::get('/photos/{id}', [PhotoController::class, 'show']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/photos', [PhotoController::class, 'store']);
     Route::patch('/photos/update/title/{id}', [PhotoController::class, 'updateTitle']);
+    Route::patch('/photos/update/image/{id}', [PhotoController::class, 'updateImage']);
 
     Route::get('/profile/{id}', [ProfileController::class, 'show']);
     Route::put('/profile/{id}', [ProfileController::class, 'update']);
