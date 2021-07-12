@@ -65,6 +65,28 @@ class PhotoController extends Controller
     }
 
     /**
+     * Search the specified resource from storage.
+     *  
+     * @param  string  $title
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request, $title)
+    {
+        $photos = Photo::where('title', 'like', '%' . $title . '%')->get();
+
+        if (count($photos) != 0) {
+            return response([
+                'message' => 'Search Results',
+                'data' => PhotoResource::collection($photos)
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Sorry, we could not find any matches.'
+            ], 200);
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

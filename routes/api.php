@@ -22,6 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/photos', [PhotoController::class, 'index']);
 Route::get('/photos/{id}', [PhotoController::class, 'show']);
+Route::get('/photos/search/{title}', [PhotoController::class, 'search']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/photos', [PhotoController::class, 'store']);
