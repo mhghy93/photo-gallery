@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class ProfileController extends Controller
 {
@@ -84,6 +86,30 @@ class ProfileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id == auth()->user()->id) {
+            $user = User::findOrFail($id);
+            $photosUploadedByUser = Photo::where('user_id', $id)->get();
+
+            // Deletes photos uploaded by users 
+            foreach ($photosUploadedByUser as $photo) {
+                if (File::exists($photo->pic)) {
+                    File::delete($photo->pic);
+                }
+                $photo->delete();
+            }
+
+            // User logout
+            auth()->user()->tokens()->delete();
+
+            $user->delete();
+
+            return response([
+                'message' => 'Profile Deleted'
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
     }
 }
