@@ -113,6 +113,7 @@ class PhotoController extends Controller
 
             $oldImagePath = $photo->pic;
 
+            // Deletes the old image from public/images folder
             if (File::exists($oldImagePath)) {
                 File::delete($oldImagePath);
             }
@@ -143,6 +144,26 @@ class PhotoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $photo = Photo::findOrFail($id);
+
+        if ($photo->user_id == auth()->user()->id) {
+           
+            $currentImagePath = $photo->pic;
+
+            // Deletes the image from public/images folder
+            if (File::exists($currentImagePath)) {
+                File::delete($currentImagePath);
+            }
+
+            $photo->delete();
+
+            return response([
+                'message' => 'Photo Deleted'
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
     }
 }
