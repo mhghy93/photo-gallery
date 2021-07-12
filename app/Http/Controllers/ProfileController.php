@@ -90,7 +90,7 @@ class ProfileController extends Controller
             $user = User::findOrFail($id);
             $photosUploadedByUser = Photo::where('user_id', $id)->get();
 
-            // Deletes photos uploaded by user 
+            // Deletes photos uploaded by logged in user 
             foreach ($photosUploadedByUser as $photo) {
                 if (File::exists($photo->pic)) {
                     File::delete($photo->pic);
